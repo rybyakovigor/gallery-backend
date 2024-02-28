@@ -20,12 +20,81 @@ enum RoleEnum {
 
 model User {
   id         String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
-  full_name  String  @db.VarChar(60)
-  email      String  @db.VarChar(60)
+  full_name  String   @db.VarChar(60)
+  email      String   @db.VarChar(60)
   blocked    Boolean  @default(false)
   role       RoleEnum
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
 
   @@map("users")
+}
+
+model Work {
+  id          String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
+  title       String   @db.VarChar(120)
+  description String   @db.VarChar()
+  width       Int
+  height      Int
+  price       Int
+  is_sold     Boolean  @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+
+  materials    Material[]
+  framing_type FramingType[]
+  images       WorkImage[]
+
+  @@map("works")
+}
+
+model WorkImage {
+  id         String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
+  title      String   @db.VarChar()
+  alt        String   @db.VarChar(120)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  file    File?
+  work    Work   @relation(fields: [work_id], references: [id])
+  work_id String
+
+  @@map("work_images")
+}
+
+model Material {
+  id         String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
+  title      String   @db.VarChar(60)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  work    Work   @relation(fields: [work_id], references: [id])
+  work_id String
+
+  @@map("work_materials")
+}
+
+model File {
+  id           String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
+  path         String   @db.VarChar()
+  preview_path String   @db.VarChar()
+  created_at   DateTime @default(now())
+  updated_at   DateTime @default(now()) @updatedAt
+
+  work_image    WorkImage @relation(fields: [work_image_id], references: [id])
+  work_image_id String    @unique
+
+  @@map("files")
+}
+
+model FramingType {
+  id         String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
+  title      String   @db.VarChar(60)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  work    Work   @relation(fields: [work_id], references: [id])
+  work_id String
+
+  @@map("framing_types")
 }
