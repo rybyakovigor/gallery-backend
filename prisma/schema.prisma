@@ -49,11 +49,11 @@ model Work {
 }
 
 model WorkImage {
-  id         String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
-  title      String   @db.VarChar()
-  alt        String   @db.VarChar(120)
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
+  id           String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
+  title        String   @db.VarChar()
+  alt          String   @db.VarChar(120)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @default(now()) @updatedAt
 
   file    File?
   work    Work   @relation(fields: [work_id], references: [id])
@@ -75,14 +75,15 @@ model Material {
 }
 
 model File {
-  id           String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
-  path         String   @db.VarChar()
-  preview_path String   @db.VarChar()
-  created_at   DateTime @default(now())
-  updated_at   DateTime @default(now()) @updatedAt
+  id         String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
+  title      String   @db.VarChar()
+  key        String   @db.VarChar()
+  path       String   @db.VarChar()
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
 
-  work_image    WorkImage @relation(fields: [work_image_id], references: [id])
-  work_image_id String    @unique
+  work_image    WorkImage? @relation(fields: [work_image_id], references: [id])
+  work_image_id String?    @unique
 
   @@map("files")
 }

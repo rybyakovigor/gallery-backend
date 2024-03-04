@@ -53,10 +53,10 @@ export class S3Service {
   }
 
   public async uploadFile(
-    bucketName: string,
     key: string,
     fileBuffer: S3.Body,
-    mimeType: string
+    mimeType: string,
+    bucketName: string = this.bucket
   ): Promise<S3.ManagedUpload.SendData> {
     return await this.s3
       .upload({
@@ -69,10 +69,10 @@ export class S3Service {
       .promise();
   }
 
-  public async deleteFile(key: string): Promise<void> {
+  public async deleteFile(key: string, bucketName: string = this.bucket): Promise<void> {
     await this.s3
       .deleteObject({
-        Bucket: this.bucket,
+        Bucket: bucketName,
         Key: key,
       })
       .promise();
@@ -85,14 +85,17 @@ export class S3Service {
     }
   }
 
-  public async getAllObjects(prefix: string): Promise<S3.ObjectList | undefined> {
+  public async getAllObjects(prefix: string, bucketName: string = this.bucket): Promise<S3.ObjectList | undefined> {
     const response: PromiseResult<S3.ListObjectsV2Output, AWSError> = await this.s3
-      .listObjectsV2({ Bucket: this.bucket, Prefix: prefix })
+      .listObjectsV2({ Bucket: bucketName, Prefix: prefix })
       .promise();
     return response.Contents;
   }
 
-  public async getObjectByKey(key: string): Promise<PromiseResult<S3.GetObjectOutput, AWSError>> {
-    return await this.s3.getObject({ Bucket: this.bucket, Key: key }).promise();
+  public async getObjectByKey(
+    key: string,
+    bucketName: string = this.bucket
+  ): Promise<PromiseResult<S3.GetObjectOutput, AWSError>> {
+    return await this.s3.getObject({ Bucket: bucketName, Key: key }).promise();
   }
 }

@@ -1,3 +1,19 @@
+-- CreateEnum
+CREATE TYPE "RoleEnum" AS ENUM ('superadmin', 'moderator');
+
+-- CreateTable
+CREATE TABLE "users" (
+    "id" TEXT NOT NULL DEFAULT fn_uuid_time_ordered(),
+    "full_name" VARCHAR(60) NOT NULL,
+    "email" VARCHAR(60) NOT NULL,
+    "blocked" BOOLEAN NOT NULL DEFAULT false,
+    "role" "RoleEnum" NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateTable
 CREATE TABLE "works" (
     "id" TEXT NOT NULL DEFAULT fn_uuid_time_ordered(),
@@ -39,11 +55,12 @@ CREATE TABLE "work_materials" (
 -- CreateTable
 CREATE TABLE "files" (
     "id" TEXT NOT NULL DEFAULT fn_uuid_time_ordered(),
+    "title" VARCHAR NOT NULL,
+    "key" VARCHAR NOT NULL,
     "path" VARCHAR NOT NULL,
-    "preview_path" VARCHAR NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "work_image_id" TEXT NOT NULL,
+    "work_image_id" TEXT,
 
     CONSTRAINT "files_pkey" PRIMARY KEY ("id")
 );
@@ -69,7 +86,7 @@ ALTER TABLE "work_images" ADD CONSTRAINT "work_images_work_id_fkey" FOREIGN KEY 
 ALTER TABLE "work_materials" ADD CONSTRAINT "work_materials_work_id_fkey" FOREIGN KEY ("work_id") REFERENCES "works"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "files" ADD CONSTRAINT "files_work_image_id_fkey" FOREIGN KEY ("work_image_id") REFERENCES "work_images"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "files" ADD CONSTRAINT "files_work_image_id_fkey" FOREIGN KEY ("work_image_id") REFERENCES "work_images"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "framing_types" ADD CONSTRAINT "framing_types_work_id_fkey" FOREIGN KEY ("work_id") REFERENCES "works"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
