@@ -41,19 +41,19 @@ model Work {
   created_at  DateTime @default(now())
   updated_at  DateTime @default(now()) @updatedAt
 
-  materials    Material[]
   framing_type FramingType[]
   images       WorkImage[]
+  materials    MaterialsOnWorks[]
 
   @@map("works")
 }
 
 model WorkImage {
-  id           String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
-  title        String   @db.VarChar()
-  alt          String   @db.VarChar(120)
-  created_at   DateTime @default(now())
-  updated_at   DateTime @default(now()) @updatedAt
+  id         String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
+  title      String   @db.VarChar()
+  alt        String   @db.VarChar(120)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
 
   file    File?
   work    Work   @relation(fields: [work_id], references: [id])
@@ -63,15 +63,23 @@ model WorkImage {
 }
 
 model Material {
-  id         String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
-  title      String   @db.VarChar(60)
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
-
-  work    Work   @relation(fields: [work_id], references: [id])
-  work_id String
+  id         String             @id @default(dbgenerated("fn_uuid_time_ordered()"))
+  title      String             @db.VarChar(60) @unique
+  created_at DateTime           @default(now())
+  updated_at DateTime           @default(now()) @updatedAt
+  works      MaterialsOnWorks[]
 
   @@map("work_materials")
+}
+
+model MaterialsOnWorks {
+  work       Work     @relation(fields: [workId], references: [id])
+  workId     String
+  material   Material @relation(fields: [materialId], references: [id])
+  materialId String
+
+  @@id([workId, materialId])
+  @@map("materials_on_works")
 }
 
 model File {
@@ -97,5 +105,5 @@ model FramingType {
   work    Work   @relation(fields: [work_id], references: [id])
   work_id String
 
-  @@map("framing_types")
+  @@map("work_framing_types")
 }
