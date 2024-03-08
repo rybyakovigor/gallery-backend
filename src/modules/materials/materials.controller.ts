@@ -1,5 +1,5 @@
 // Core
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
 
 // Services
 import { MaterialsService } from './materials.service';
@@ -13,6 +13,10 @@ import { CreateOrUpdateMaterialDto } from './dto/create-or-update-material.dto';
 // Types
 import { Material } from './types/material';
 
+// Guards
+import { AuthGuard } from '../core/guards/auth.guard';
+
+@UseGuards(AuthGuard)
 @Controller('materials')
 export class MaterialsController {
   public constructor(private readonly service: MaterialsService) {}
