@@ -35,11 +35,11 @@ export class AppConfigService {
 
   public get config(): Config {
     return {
-      databaseUrl: this.configService.get(DATABASE_URL),
+      databaseUrl: this.configService.get(DATABASE_URL) as string,
       s3: {
-        accessKey: this.configService.get(ACCESS_KEY),
-        secretKey: this.configService.get(SECRET_KEY),
-        endpointUrl: this.configService.get(ENDPOINT_URL),
+        accessKey: this.configService.get(ACCESS_KEY) as string,
+        secretKey: this.configService.get(SECRET_KEY) as string,
+        endpointUrl: this.configService.get(ENDPOINT_URL) as string,
       },
     };
   }

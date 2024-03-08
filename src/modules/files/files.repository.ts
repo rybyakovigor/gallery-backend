@@ -23,7 +23,7 @@ export class FilesRepository {
     return this.filesRepository(tx).create({ data: body });
   }
 
-  public async findById(id: string, tx?: TransactionClient): Promise<File> {
+  public async findById(id: string, tx?: TransactionClient): Promise<File | null> {
     return this.filesRepository(tx).findUnique({ where: { id } });
   }
 

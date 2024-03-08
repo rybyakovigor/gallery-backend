@@ -25,7 +25,7 @@ export class MaterialsRepository {
     return this.materialRepository(tx).create({ data: body });
   }
 
-  public async findById(id: string, tx?: TransactionClient): Promise<Material> {
+  public async findById(id: string, tx?: TransactionClient): Promise<Material | null> {
     return this.materialRepository(tx).findUnique({ where: { id } });
   }
 

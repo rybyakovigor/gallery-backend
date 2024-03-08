@@ -1,5 +1,5 @@
 // Core
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { MaterialsRepository } from './materials.repository';
 
 // Types
@@ -17,19 +17,24 @@ export class MaterialsService {
   }
 
   public async create(body: CreateOrUpdateMaterialDto): Promise<Material> {
-    //@ts-expect-error title required
     return await this.materialsRepository.create(body);
   }
 
   public async findById(id: string): Promise<Material> {
-    return this.materialsRepository.findById(id);
+    const row = await this.materialsRepository.findById(id);
+    if (!row) {
+      throw new NotFoundException(`Material with id ${id} not found`);
+    }
+    return row;
   }
 
   public async update(id: string, body: CreateOrUpdateMaterialDto): Promise<Material> {
+    await this.findById(id);
     return this.materialsRepository.update(id, body);
   }
 
   public async delete(id: string): Promise<void> {
+    await this.findById(id);
     await this.materialsRepository.delete(id);
   }
 }
