@@ -15,21 +15,21 @@ import { Material } from './types/material';
 
 @Controller('materials')
 export class MaterialsController {
-  public constructor(private readonly materialsService: MaterialsService) {}
+  public constructor(private readonly service: MaterialsService) {}
 
   @Get()
   public async findAll(): Promise<Material[]> {
-    return this.materialsService.findAll();
+    return this.service.findAll();
   }
 
   @Get(':id')
   public async findById(@Param('id', new UuidV6ValidationPipe()) id: string): Promise<Material> {
-    return this.materialsService.findById(id);
+    return this.service.findById(id);
   }
 
   @Post()
   public async create(@Body() body: CreateOrUpdateMaterialDto): Promise<Material> {
-    return this.materialsService.create(body);
+    return this.service.create(body);
   }
 
   @Put(':id')
@@ -37,12 +37,12 @@ export class MaterialsController {
     @Param('id', new UuidV6ValidationPipe()) id: string,
     @Body() body: CreateOrUpdateMaterialDto
   ): Promise<Material> {
-    return this.materialsService.update(id, body);
+    return this.service.update(id, body);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async delete(@Param('id', new UuidV6ValidationPipe()) id: string): Promise<void> {
-    return this.materialsService.delete(id);
+    return this.service.delete(id);
   }
 }

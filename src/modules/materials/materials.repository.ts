@@ -13,27 +13,27 @@ import { Material, MaterialRepository } from './types/material';
 export class MaterialsRepository {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  private materialRepository(tx?: TransactionClient): MaterialRepository {
+  private repository(tx?: TransactionClient): MaterialRepository {
     return tx ? tx.material : this.prismaService.material;
   }
 
   public findAll(where?: Prisma.MaterialWhereInput): Promise<Material[]> {
-    return this.materialRepository().findMany({ where });
+    return this.repository().findMany({ where });
   }
 
   public async create(body: Prisma.MaterialCreateInput, tx?: TransactionClient): Promise<Material> {
-    return this.materialRepository(tx).create({ data: body });
+    return this.repository(tx).create({ data: body });
   }
 
   public async findById(id: string, tx?: TransactionClient): Promise<Material | null> {
-    return this.materialRepository(tx).findUnique({ where: { id } });
+    return this.repository(tx).findUnique({ where: { id } });
   }
 
   public async update(id: string, body: Prisma.MaterialUpdateInput, tx?: TransactionClient): Promise<Material> {
-    return this.materialRepository(tx).update({ where: { id }, data: body });
+    return this.repository(tx).update({ where: { id }, data: body });
   }
 
   public async delete(id: string, tx?: TransactionClient): Promise<Material> {
-    return this.materialRepository(tx).delete({ where: { id } });
+    return this.repository(tx).delete({ where: { id } });
   }
 }
