@@ -6,8 +6,9 @@ import { CoreModule } from './modules/core/core.module';
 import { FilesModule } from './modules/files/files.module';
 import { MaterialsModule } from './modules/materials/materials.module';
 import { FramingTypesModule } from './modules/framing-types/framing-types.module';
+import { WorksModule } from './modules/works/works.module';
 
 @Module({
-  imports: [CoreModule, FilesModule, MaterialsModule, FramingTypesModule],
+  imports: [CoreModule, FilesModule, MaterialsModule, FramingTypesModule, WorksModule],
 })
 export class AppModule {}

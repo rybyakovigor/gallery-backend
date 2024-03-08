@@ -41,7 +41,7 @@ model Work {
   created_at  DateTime @default(now())
   updated_at  DateTime @default(now()) @updatedAt
 
-  framing_type FramingTypesOnWorks[]
+  framing_types FramingTypesOnWorks[]
   images       WorkImage[]
   materials    MaterialsOnWorks[]
 
@@ -50,8 +50,6 @@ model Work {
 
 model WorkImage {
   id         String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
-  title      String   @db.VarChar()
-  alt        String   @db.VarChar(120)
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
 
