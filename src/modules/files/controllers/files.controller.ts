@@ -10,17 +10,17 @@ import { File } from '../types/file';
 
 @Controller('files')
 export class FilesController {
-  public constructor(private readonly filesService: FilesService) {}
+  public constructor(private readonly service: FilesService) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   public async upload(@UploadedFile() file: Express.Multer.File): Promise<File> {
-    return await this.filesService.create(file);
+    return await this.service.create(file);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async delete(@Param('id') id: string): Promise<void> {
-    await this.filesService.delete(id);
+    await this.service.delete(id);
   }
 }

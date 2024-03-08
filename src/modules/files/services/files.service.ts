@@ -20,8 +20,8 @@ import { ImageHandlingService } from './image-handling.service';
 @Injectable()
 export class FilesService {
   public constructor(
+    private readonly repository: FilesRepository,
     private readonly s3Service: S3Service,
-    private readonly filesRepository: FilesRepository,
     private readonly imageHandlingService: ImageHandlingService,
     private readonly transactionService: TransactionService
   ) {}
@@ -45,7 +45,7 @@ export class FilesService {
     }
 
     try {
-      return this.filesRepository.create(body as Prisma.FileCreateInput, tx);
+      return this.repository.create(body as Prisma.FileCreateInput, tx);
     } catch (error) {
       await this.s3Service.deleteFile(key);
       throw new HttpException('Error when save file', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -57,7 +57,7 @@ export class FilesService {
 
     await this.transactionService.getTransactionClient(async (tx) => {
       try {
-        await this.filesRepository.delete(id, tx);
+        await this.repository.delete(id, tx);
         await this.s3Service.deleteFile(file.key);
       } catch (error) {
         throw new HttpException('Error when delete file', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -66,7 +66,7 @@ export class FilesService {
   }
 
   private async checkExist(id: string): Promise<File> {
-    const result = await this.filesRepository.findById(id);
+    const result = await this.repository.findById(id);
     if (!result) {
       throw new NotFoundException(`File with id ${id} not found`);
     }
