@@ -5,6 +5,7 @@ import { Prisma } from '@prisma/client';
 // Services
 import { S3Service } from '@/modules/core/modules/s3/s3.service';
 import { TransactionService } from '@/modules/core/modules/database/services/transaction.service';
+import { ImageHandlingService } from './image-handling.service';
 
 // Types
 import { TransactionClient } from '@/modules/core/modules/database/types/transactionClient.interface';
@@ -15,7 +16,6 @@ import { FilesRepository } from '../files.repository';
 
 // Utils
 import { generateFileKey } from '../utils/generate-file-key';
-import { ImageHandlingService } from './image-handling.service';
 
 @Injectable()
 export class FilesService {
@@ -63,6 +63,14 @@ export class FilesService {
         throw new HttpException('Error when delete file', HttpStatus.INTERNAL_SERVER_ERROR);
       }
     });
+  }
+
+  public async deleteFromStorage(key: string): Promise<void> {
+    try {
+      await this.s3Service.deleteFile(key);
+    } catch (error) {
+      throw new HttpException('Error when delete file from storage', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   private async checkExist(id: string): Promise<File> {

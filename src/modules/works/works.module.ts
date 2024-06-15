@@ -1,6 +1,9 @@
 // Core
 import { Module } from '@nestjs/common';
 
+// Modules
+import { FilesModule } from '../files/files.module';
+
 // Repositories
 import { WorksRepository } from './works.repository';
 
@@ -11,6 +14,7 @@ import { WorksService } from './works.service';
 import { WorksController } from './works.controller';
 
 @Module({
+  imports: [FilesModule],
   providers: [WorksRepository, WorksService],
   controllers: [WorksController],
 })

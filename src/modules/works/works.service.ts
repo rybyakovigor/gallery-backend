@@ -1,5 +1,6 @@
 // Core
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 
 // Repositories
 import { WorksRepository } from './works.repository';
@@ -7,13 +8,19 @@ import { WorksRepository } from './works.repository';
 // Types
 import { Work } from './types/work';
 
+// Services
+import { FilesService } from '../files/services/files.service';
+
 // Dto
 import { CreateWorkDto } from './dto/create-work.dto';
 import { UpdateWorkDto } from './dto/update-work.dto';
 
 @Injectable()
 export class WorksService {
-  public constructor(private readonly repository: WorksRepository) {}
+  public constructor(
+    private readonly repository: WorksRepository,
+    private readonly filesService: FilesService
+  ) {}
 
   public async findAll(): Promise<Work[]> {
     return this.repository.findAll();
@@ -36,7 +43,7 @@ export class WorksService {
         create: body.images.map((item) => ({ file: { connect: { id: item } } })),
       },
     };
-    return await this.repository.create(data);
+    return this.repository.create(data);
   }
 
   public async findById(id: string): Promise<Work> {
@@ -48,8 +55,8 @@ export class WorksService {
   }
 
   public async update(id: string, body: UpdateWorkDto): Promise<Work> {
-    await this.findById(id);
-    const data = {
+    const work = await this.findById(id);
+    const data: Prisma.WorkUpdateInput = {
       title: body.title,
       description: body.description,
       width: body.width,
@@ -76,16 +83,28 @@ export class WorksService {
       });
     }
 
+    let imagesToDelete: Work['images'] = [];
     if (body.images) {
-      Object.assign(data, {
+      const currentImages = work.images!;
+      const currentImageIds = currentImages.map((image) => image.file!.id);
+
+      imagesToDelete = currentImages.filter((image) => !body.images!.includes(image.file!.id));
+
+      const newImageIds = body.images.filter((imageId) => !currentImageIds.includes(imageId));
+
+      Object.assign<Prisma.WorkUpdateInput, Prisma.WorkUpdateInput>(data, {
         images: {
-          deleteMany: {},
-          create: body.images.map((item) => ({ file: { connect: { id: item } } })),
+          deleteMany: imagesToDelete.map((image) => ({ id: image.id })),
+          create: newImageIds.map((imageId) => ({ file: { connect: { id: imageId } } })),
         },
       });
     }
 
-    return this.repository.update(id, data);
+    const result = await this.repository.update(id, data);
+
+    await Promise.all(imagesToDelete.map((image) => this.filesService.deleteFromStorage(image.file!.key)));
+
+    return result;
   }
 
   public async delete(id: string): Promise<void> {
