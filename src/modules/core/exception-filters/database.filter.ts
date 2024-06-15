@@ -1,5 +1,9 @@
+// Core
 import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+
+// Types
+import { PrismaErrors } from '../modules/database/types/errors.enum';
 
 @Catch(PrismaClientKnownRequestError)
 export class DatabaseExceptionFilter implements ExceptionFilter {
@@ -11,9 +15,14 @@ export class DatabaseExceptionFilter implements ExceptionFilter {
     let message = 'An database unexpected error occurred.';
     const context = 'Database';
 
-    if (exception.code === 'P2002') {
+    if (exception.code === PrismaErrors.UniqueViolation) {
       status = HttpStatus.CONFLICT;
       message = 'A conflict occurred due to a unique constraint violation.';
+    }
+
+    if (exception.code === PrismaErrors.ForeignKeyViolation) {
+      status = HttpStatus.CONFLICT;
+      message = 'Conflict occurred due to a foreign key constraint violation.';
     }
 
     response.status(status).json({

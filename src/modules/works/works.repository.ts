@@ -19,18 +19,32 @@ export class WorksRepository {
 
   private get include(): Prisma.WorkInclude {
     return {
+      images: { select: { file: true } },
       materials: { select: { material: true } },
       framing_types: { select: { framing_type: true } },
-      images: { select: { file: true } },
     };
   }
 
   public findAll(where?: Prisma.WorkWhereInput): Promise<Work[]> {
-    return this.repository().findMany({ where, include: { images: { select: { file: true } } } });
+    return this.repository().findMany({
+      where,
+      include: {
+        images: { select: { file: true } },
+        materials: { select: { material: true } },
+        framing_types: { select: { framing_type: true } },
+      },
+    });
   }
 
   public async create(body: Prisma.WorkCreateInput, tx?: TransactionClient): Promise<Work> {
-    return this.repository(tx).create({ data: body });
+    return this.repository(tx).create({
+      data: body,
+      include: {
+        materials: { select: { material: true } },
+        framing_types: { select: { framing_type: true } },
+        images: { select: { id: true, file: true } },
+      },
+    });
   }
 
   public async findById(id: string, tx?: TransactionClient): Promise<Work | null> {
@@ -39,7 +53,7 @@ export class WorksRepository {
       include: {
         materials: { select: { material: true } },
         framing_types: { select: { framing_type: true } },
-        images: { select: { file: true } },
+        images: { select: { id: true, file: true } },
       },
     });
   }

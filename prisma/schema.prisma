@@ -42,8 +42,8 @@ model Work {
   updated_at  DateTime @default(now()) @updatedAt
 
   framing_types FramingTypesOnWorks[]
-  images       WorkImage[]
-  materials    MaterialsOnWorks[]
+  images        WorkImage[]
+  materials     MaterialsOnWorks[]
 
   @@map("works")
 }
@@ -54,7 +54,7 @@ model WorkImage {
   updated_at DateTime @default(now()) @updatedAt
 
   file    File?
-  work    Work   @relation(fields: [work_id], references: [id])
+  work    Work   @relation(fields: [work_id], references: [id], onDelete: Cascade)
   work_id String
 
   @@map("work_images")
@@ -71,7 +71,7 @@ model Material {
 }
 
 model MaterialsOnWorks {
-  work        Work     @relation(fields: [work_id], references: [id])
+  work        Work     @relation(fields: [work_id], references: [id], onDelete: Cascade)
   work_id     String
   material    Material @relation(fields: [material_id], references: [id])
   material_id String
@@ -81,7 +81,7 @@ model MaterialsOnWorks {
 }
 
 model FramingTypesOnWorks {
-  work            Work        @relation(fields: [work_id], references: [id])
+  work            Work        @relation(fields: [work_id], references: [id], onDelete: Cascade)
   work_id         String
   framing_type    FramingType @relation(fields: [framing_type_id], references: [id])
   framing_type_id String
@@ -98,7 +98,7 @@ model File {
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
 
-  work_image    WorkImage? @relation(fields: [work_image_id], references: [id])
+  work_image    WorkImage? @relation(fields: [work_image_id], references: [id], onDelete: Cascade)
   work_image_id String?    @unique
 
   @@map("files")

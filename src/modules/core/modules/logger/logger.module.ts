@@ -17,16 +17,23 @@ import { LoggerModule as PinoLogger } from 'nestjs-pino';
               method: req.method,
               url: req.url,
               query: req.query,
+              body: req.raw.body,
             };
           },
           res(res) {
             return {
-              code: res.raw.err?.status,
-              message: res.raw.err?.message,
+              statusCode: res.statusCode,
+              statusMessage: res.statusMessage,
             };
           },
-          err() {
-            return;
+          err(error) {
+            // Если ошибка в приложении
+            return {
+              type: error?.type,
+              meta: error?.meta,
+              code: error?.code,
+              message: error?.message,
+            };
           },
         },
         customLogLevel: (_, res, err) => {
@@ -38,7 +45,10 @@ import { LoggerModule as PinoLogger } from 'nestjs-pino';
           }
           return 'info';
         },
-        transport: { target: 'pino-pretty', options: { singleLine: true } },
+        transport: {
+          target: 'pino-pretty',
+          options: { singleLine: true, colorize: true, errorLikeObjectKeys: ['err', 'error'] },
+        },
       },
     }),
   ],

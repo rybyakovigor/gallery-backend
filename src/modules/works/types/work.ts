@@ -10,7 +10,7 @@ import { File } from '@/modules/files/types/file';
 export interface Work extends WorkType {
   materials?: { material: Material }[];
   framing_types?: { framing_type: FramingType }[];
-  images?: { file: File | null }[];
+  images?: { id?: string; file: File | null }[];
 }
 
 export interface WorkRepository extends Prisma.WorkDelegate<DefaultArgs> {}
