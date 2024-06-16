@@ -9,6 +9,7 @@ export const WorkSchema = z.object({
   height: z.number().int(),
   price: z.number().int(),
   is_sold: z.boolean().optional().default(false),
+  is_active: z.boolean().optional().default(false),
   framing_types: z.array(z.string()),
   images: z.array(z.string()),
   materials: z.array(z.string()),

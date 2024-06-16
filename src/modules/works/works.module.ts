@@ -11,11 +11,12 @@ import { WorksRepository } from './works.repository';
 import { WorksService } from './works.service';
 
 // Controllers
-import { WorksController } from './works.controller';
+import { WorksController } from './controllers/works.controller';
+import { GalleryController } from './controllers/gallery.controller';
 
 @Module({
   imports: [FilesModule],
   providers: [WorksRepository, WorksService],
-  controllers: [WorksController],
+  controllers: [WorksController, GalleryController],
 })
 export class WorksModule {}

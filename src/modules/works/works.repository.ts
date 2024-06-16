@@ -17,15 +17,7 @@ export class WorksRepository {
     return tx ? tx.work : this.prismaService.work;
   }
 
-  private get include(): Prisma.WorkInclude {
-    return {
-      images: { select: { file: true } },
-      materials: { select: { material: true } },
-      framing_types: { select: { framing_type: true } },
-    };
-  }
-
-  public findAll(where?: Prisma.WorkWhereInput): Promise<Work[]> {
+  public findAll(where?: Prisma.WorkWhereInput, limit?: string): Promise<Work[]> {
     return this.repository().findMany({
       where,
       include: {
@@ -33,6 +25,8 @@ export class WorksRepository {
         materials: { select: { material: true } },
         framing_types: { select: { framing_type: true } },
       },
+      take: limit ? Number(limit) : undefined,
+      orderBy: { created_at: 'asc' },
     });
   }
 
