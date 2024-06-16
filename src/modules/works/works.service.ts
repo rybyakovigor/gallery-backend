@@ -26,6 +26,10 @@ export class WorksService {
     return this.repository.findAll();
   }
 
+  public async findAllForGallery(limit?: string): Promise<Work[]> {
+    return this.repository.findAll({ is_active: true }, limit);
+  }
+
   public async create(body: CreateWorkDto): Promise<Work> {
     const data = {
       title: body.title,
@@ -33,6 +37,8 @@ export class WorksService {
       width: body.width,
       height: body.height,
       price: body.price,
+      is_sold: body.is_sold,
+      is_active: body.is_active,
       framing_types: {
         create: body.framing_types.map((item) => ({ framing_type: { connect: { id: item } } })),
       },
@@ -63,6 +69,7 @@ export class WorksService {
       height: body.height,
       price: body.price,
       is_sold: body.is_sold,
+      is_active: body.is_active,
     };
 
     if (body.framing_types) {

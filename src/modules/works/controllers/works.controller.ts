@@ -2,20 +2,20 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
 
 // Services
-import { WorksService } from './works.service';
+import { WorksService } from '../works.service';
 
 // Pipes
-import { UuidV6ValidationPipe } from '../core/pipes/validate-uuidv6.pipe';
+import { UuidV6ValidationPipe } from '@/modules/core/pipes/validate-uuidv6.pipe';
 
 // DTO
-import { CreateWorkDto } from './dto/create-work.dto';
-import { UpdateWorkDto } from './dto/update-work.dto';
+import { CreateWorkDto } from '../dto/create-work.dto';
+import { UpdateWorkDto } from '../dto/update-work.dto';
 
 // Types
-import { Work } from './types/work';
+import { Work } from '../types/work';
 
 // Guards
-import { AuthGuard } from '../core/guards/auth.guard';
+import { AuthGuard } from '@/modules/core/guards/auth.guard';
 
 @UseGuards(AuthGuard)
 @Controller('works')
