@@ -115,3 +115,14 @@ model FramingType {
 
   @@map("work_framing_types")
 }
+
+model Feedback {
+  id         String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
+  name       String   @db.VarChar(60)
+  email      String?  @db.VarChar(60)
+  phone      String?  @db.VarChar(60)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("feedback")
+}
