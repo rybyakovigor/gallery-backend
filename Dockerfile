@@ -11,7 +11,7 @@ ENV NODE_ENV=${NODE_ENV}
 WORKDIR /app
 
 COPY package.json yarn.lock ./
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 COPY . ./
 RUN yarn build && npx prisma generate
