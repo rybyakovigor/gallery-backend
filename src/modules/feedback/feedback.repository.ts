@@ -13,8 +13,8 @@ import { Feedback, FeedbackRepository as FeedbackRepositoryType } from './types/
 export class FeedbackRepository {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  repository(tx?: TransactionClient): FeedbackRepositoryType {
-    return tx ? tx.feedback : this.prismaService.feedback;
+  private repository(tx?: TransactionClient): FeedbackRepositoryType {
+    return tx ? tx.feedback : this.prismaService.feedback
   }
 
   public findAll(where?: Prisma.FeedbackWhereInput): Promise<Feedback[]> {
