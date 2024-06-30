@@ -14,7 +14,7 @@ export class FeedbackRepository {
   public constructor(private readonly prismaService: PrismaService) {}
 
   private repository(tx?: TransactionClient): FeedbackRepositoryType {
-    return tx.feedback;
+    return tx ? tx.feedback : this.prismaService.feedback;
   }
 
   public findAll(where?: Prisma.FeedbackWhereInput): Promise<Feedback[]> {
