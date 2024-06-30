@@ -1,33 +1,29 @@
+variables:
+  NODE_IMAGE: node:20
+
+cache:
+  key:
+    files:
+      - yarn.lock
+  paths:
+    - node_modules/
+  policy: pull-push
+
 stages:
   - setup
   - checks
 
 install_dependencies:
   stage: setup
-  image: node:20
-  cache:
-    key:
-      files:
-        - yarn.lock
-    paths:
-      - node_modules/
-    policy: pull-push
-  script:
-    - yarn install --frozen-lockfile
+  image: $NODE_IMAGE
+  script: yarn install --frozen-lockfile
   only:
     - merge_requests
 
 linter:
   stage: checks
-  image: node:20
-  cache:
-    key:
-      files:
-        - yarn.lock
-    paths:
-      - node_modules/
-  script:
-    - yarn check:lint
+  image: $NODE_IMAGE
+  script: yarn check:lint
   needs:
     - install_dependencies
   only:
@@ -35,31 +31,17 @@ linter:
 
 prettier:
   stage: checks
-  image: node:20
-  cache:
-    key:
-      files:
-        - yarn.lock
-    paths:
-      - node_modules/
-  script:
-    - yarn check:prettier
+  image: $NODE_IMAGE
+  script: yarn check:prettier
   needs:
     - install_dependencies
   only:
     - merge_requests
 
-type-checking:
+type_checking:
   stage: checks
-  image: node:20
-  cache:
-    key:
-      files:
-        - yarn.lock
-    paths:
-      - node_modules/
-  script:
-    - yarn check:types
+  image: $NODE_IMAGE
+  script: yarn check:types
   needs:
     - install_dependencies
   only:
