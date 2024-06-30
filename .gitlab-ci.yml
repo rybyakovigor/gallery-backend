@@ -1,16 +1,35 @@
 stages:
+  - setup
   - checks
+
+install_dependencies:
+  stage: setup
+  image: node:20
+  cache:
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - node_modules/
+    policy: pull-push
+  script:
+    - yarn install --frozen-lockfile
+  only:
+    - merge_requests
 
 linter:
   stage: checks
   image: node:20
   cache:
-    key: ${CI_COMMIT_REF_SLUG}-node-${CI_COMMIT_SHA}
+    key:
+      files:
+        - yarn.lock
     paths:
       - node_modules/
   script:
-    - yarn install --frozen-lockfile
     - yarn check:lint
+  needs:
+    - install_dependencies
   only:
     - merge_requests
 
@@ -18,12 +37,15 @@ prettier:
   stage: checks
   image: node:20
   cache:
-    key: ${CI_COMMIT_REF_SLUG}-node-${CI_COMMIT_SHA}
+    key:
+      files:
+        - yarn.lock
     paths:
       - node_modules/
   script:
-    - yarn install --frozen-lockfile
     - yarn check:prettier
+  needs:
+    - install_dependencies
   only:
     - merge_requests
 
@@ -31,11 +53,14 @@ type-checking:
   stage: checks
   image: node:20
   cache:
-    key: ${CI_COMMIT_REF_SLUG}-node-${CI_COMMIT_SHA}
+    key:
+      files:
+        - yarn.lock
     paths:
       - node_modules/
   script:
-    - yarn install --frozen-lockfile
     - yarn check:types
+  needs:
+    - install_dependencies
   only:
     - merge_requests
