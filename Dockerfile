@@ -14,7 +14,7 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 COPY . ./
-RUN yarn build && npx prisma generate
+RUN yarn build && yarn prisma generate
 
 FROM ${CONTAINER_IMAGE}
 
