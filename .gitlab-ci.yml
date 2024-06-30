@@ -59,7 +59,7 @@ type_checking:
 deploy:
   stage: deploy
   script:
-    - docker-compose -f docker-compose.yml up -d --build
+    - docker compose -f docker-compose.yml up -d --build
   needs:
     - linter
     - prettier
