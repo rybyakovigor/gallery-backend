@@ -1,0 +1,41 @@
+stages:
+  - checks
+
+linter:
+  stage: checks
+  image: node:20
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-node-${CI_COMMIT_SHA}
+    paths:
+      - node_modules/
+  script:
+    - yarn install --frozen-lockfile
+    - yarn check:lint
+  only:
+    - merge_requests
+
+prettier:
+  stage: checks
+  image: node:20
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-node-${CI_COMMIT_SHA}
+    paths:
+      - node_modules/
+  script:
+    - yarn install --frozen-lockfile
+    - yarn check:prettier
+  only:
+    - merge_requests
+
+type-checking:
+  stage: checks
+  image: node:20
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-node-${CI_COMMIT_SHA}
+    paths:
+      - node_modules/
+  script:
+    - yarn install --frozen-lockfile
+    - yarn check:types
+  only:
+    - merge_requests
