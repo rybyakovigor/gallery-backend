@@ -13,7 +13,7 @@ import { Feedback, FeedbackRepository as FeedbackRepositoryType } from './types/
 export class FeedbackRepository {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  private repository(tx?: TransactionClient): FeedbackRepositoryType {
+  repository(tx?: TransactionClient): FeedbackRepositoryType {
     return tx ? tx.feedback : this.prismaService.feedback;
   }
 
