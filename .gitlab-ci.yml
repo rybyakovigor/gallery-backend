@@ -12,6 +12,7 @@ cache:
 stages:
   - setup
   - checks
+  - deploy
 
 install_dependencies:
   stage: setup
@@ -19,6 +20,8 @@ install_dependencies:
   script: yarn install --frozen-lockfile
   only:
     - merge_requests
+    - develop
+    - master
 
 linter:
   stage: checks
@@ -28,6 +31,8 @@ linter:
     - install_dependencies
   only:
     - merge_requests
+    - develop
+    - master
 
 prettier:
   stage: checks
@@ -37,6 +42,8 @@ prettier:
     - install_dependencies
   only:
     - merge_requests
+    - develop
+    - master
 
 type_checking:
   stage: checks
@@ -46,3 +53,20 @@ type_checking:
     - install_dependencies
   only:
     - merge_requests
+    - develop
+    - master
+
+deploy:
+  stage: deploy
+  script:
+    - docker-compose -f docker-compose.yml up -d --build
+  needs:
+    - linter
+    - prettier
+    - type_checking
+  tags:
+    - gallery
+    - backend
+    - production
+  only:
+    - master
