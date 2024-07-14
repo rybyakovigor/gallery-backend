@@ -23,6 +23,8 @@ async function bootstrap(): Promise<void> {
   // Logger
   initializeLogger(app);
 
+  app.setGlobalPrefix('api');
+
   await app.listen(3000);
 }
 
