@@ -1,5 +1,5 @@
 // Core
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 // Services
@@ -19,6 +19,7 @@ import { generateFileKey } from '../utils/generate-file-key';
 
 @Injectable()
 export class FilesService {
+  private readonly logger = new Logger(FilesService.name);
   public constructor(
     private readonly repository: FilesRepository,
     private readonly s3Service: S3Service,
@@ -41,6 +42,7 @@ export class FilesService {
       const { Location } = await this.s3Service.uploadFile(key, fileBuffer, file.mimetype);
       body.path = Location;
     } catch (error) {
+      this.logger.error(error);
       throw new HttpException('Error when upload file to s3', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
