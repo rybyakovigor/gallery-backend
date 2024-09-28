@@ -16,6 +16,7 @@ export class S3Service {
       secretAccessKey: configService.config.s3.secretKey,
       // Для работы с локальным s3
       s3ForcePathStyle: true,
+      signatureVersion: 'v4',
     });
 
     this.bucket = 'root';
