@@ -11,15 +11,15 @@ export class S3Service {
 
   public constructor(private readonly configService: AppConfigService) {
     this.s3 = new S3({
-      endpoint: configService.config.s3.endpointUrl,
-      accessKeyId: configService.config.s3.accessKey,
-      secretAccessKey: configService.config.s3.secretKey,
+      endpoint: this.configService.config.s3.endpointUrl,
+      accessKeyId: this.configService.config.s3.accessKey,
+      secretAccessKey: this.configService.config.s3.secretKey,
       // Для работы с локальным s3
       s3ForcePathStyle: true,
       signatureVersion: 'v4',
     });
 
-    this.bucket = 'root';
+    this.bucket = 'gallery';
 
     void this.startupBucketCheck();
   }
