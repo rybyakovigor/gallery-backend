@@ -1,5 +1,5 @@
 // Core
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 // Repositories
@@ -31,6 +31,7 @@ export class WorksService {
   }
 
   public async create(body: CreateWorkDto): Promise<Work> {
+    this.checkImages(body);
     const data = {
       title: body.title,
       description: body.description,
@@ -61,6 +62,7 @@ export class WorksService {
   }
 
   public async update(id: string, body: UpdateWorkDto): Promise<Work> {
+    this.checkImages(body);
     const work = await this.findById(id);
     const data: Prisma.WorkUpdateInput = {
       title: body.title,
@@ -117,5 +119,11 @@ export class WorksService {
   public async delete(id: string): Promise<void> {
     await this.findById(id);
     await this.repository.delete(id);
+  }
+
+  private checkImages(work: CreateWorkDto | UpdateWorkDto): void {
+    if (!work.images?.length && work.is_active) {
+      throw new BadRequestException('Active work should be done with the image');
+    }
   }
 }
