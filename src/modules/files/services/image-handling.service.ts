@@ -17,7 +17,7 @@ export class ImageHandlingService {
 
       if (metadata.width && metadata.height) {
         const { width, height } = this.calculateResizedDimensions(metadata.width, metadata.height);
-        handlingImage.resize(width, height, { fit: 'inside' }).withMetadata(); // withMetadata() для сохранения ориентации изображения
+        handlingImage.resize(width, height, { fit: 'inside' }).rotate(); // rotate() для сохранения ориентации изображения
       }
 
       const processedImageBuffer: Buffer = await this.reduceQuality(handlingImage);
