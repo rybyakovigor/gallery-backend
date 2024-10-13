@@ -17,7 +17,11 @@ export class WorksRepository {
     return tx ? tx.work : this.prismaService.work;
   }
 
-  public findAll(where?: Prisma.WorkWhereInput, limit?: string): Promise<Work[]> {
+  public findAll(
+    where?: Prisma.WorkWhereInput,
+    orderBy: Prisma.WorkOrderByWithRelationInput = { created_at: 'asc' },
+    limit?: string
+  ): Promise<Work[]> {
     return this.repository().findMany({
       where,
       include: {
@@ -26,7 +30,7 @@ export class WorksRepository {
         framing_types: { select: { framing_type: true } },
       },
       take: limit ? Number(limit) : undefined,
-      orderBy: { created_at: 'asc' },
+      orderBy: orderBy,
     });
   }
 

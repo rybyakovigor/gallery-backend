@@ -27,7 +27,7 @@ export class WorksService {
   }
 
   public async findAllForGallery(limit?: string): Promise<Work[]> {
-    return this.repository.findAll({ is_active: true }, limit);
+    return this.repository.findAll({ is_active: true }, { created_at: 'desc' }, limit);
   }
 
   public async create(body: CreateWorkDto): Promise<Work> {
