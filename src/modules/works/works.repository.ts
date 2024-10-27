@@ -25,7 +25,7 @@ export class WorksRepository {
     return this.repository().findMany({
       where,
       include: {
-        images: { select: { file: true } },
+        images: { select: { file: true, order: true }, orderBy: { order: 'asc' } },
         materials: { select: { material: true } },
         framing_types: { select: { framing_type: true } },
       },
@@ -51,7 +51,7 @@ export class WorksRepository {
       include: {
         materials: { select: { material: true } },
         framing_types: { select: { framing_type: true } },
-        images: { select: { id: true, file: true } },
+        images: { select: { id: true, file: true, order: true }, orderBy: { order: 'asc' } },
       },
     });
   }

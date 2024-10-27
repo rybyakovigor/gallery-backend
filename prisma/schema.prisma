@@ -54,6 +54,7 @@ model WorkImage {
   id         String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
+  order      Int      @default(0)
 
   file    File?
   work    Work   @relation(fields: [work_id], references: [id], onDelete: Cascade)
