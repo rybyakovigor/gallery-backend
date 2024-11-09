@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-arm64-openssl-1.1.x"]
 }
 
@@ -127,4 +127,14 @@ model Feedback {
   updated_at DateTime @default(now()) @updatedAt
 
   @@map("feedback")
+}
+
+model Metric {
+  id         String   @id @default(dbgenerated("fn_uuid_time_ordered()"))
+  page       String   @db.VarChar(60)
+  ip         String?  @db.VarChar(60)
+  useragent  Json?
+  created_at DateTime @default(now())
+
+  @@map("metrics")
 }

@@ -8,8 +8,9 @@ import { MaterialsModule } from './modules/materials/materials.module';
 import { FramingTypesModule } from './modules/framing-types/framing-types.module';
 import { WorksModule } from './modules/works/works.module';
 import { FeedbackModule } from './modules/feedback/feedback.module';
+import { MetricsModule } from './modules/metrics/metrics.module';
 
 @Module({
-  imports: [CoreModule, FilesModule, MaterialsModule, FramingTypesModule, WorksModule, FeedbackModule],
+  imports: [CoreModule, FilesModule, MaterialsModule, FramingTypesModule, WorksModule, FeedbackModule, MetricsModule],
 })
 export class AppModule {}
