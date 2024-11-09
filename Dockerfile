@@ -14,7 +14,7 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 COPY . ./
-RUN yarn prisma generate && yarn migration:run && yarn build
+RUN yarn prisma generate && yarn prisma migrate deploy && yarn build
 
 FROM ${CONTAINER_IMAGE}
 
