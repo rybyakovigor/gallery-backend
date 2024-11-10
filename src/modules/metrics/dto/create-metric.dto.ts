@@ -6,6 +6,7 @@ const metricSchema = z.object({
   page: z.string(),
   ip: z.string().optional(),
   useragent: z.json().optional(),
+  location: z.json().optional(),
 });
 
 export class CreateMetricDto extends createZodDto(metricSchema) {}

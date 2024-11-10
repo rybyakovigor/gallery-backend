@@ -134,6 +134,7 @@ model Metric {
   page       String   @db.VarChar(60)
   ip         String?  @db.VarChar(60)
   useragent  Json?
+  location   Json?
   created_at DateTime @default(now())
 
   @@map("metrics")

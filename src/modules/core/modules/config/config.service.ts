@@ -10,6 +10,10 @@ interface Config {
     endpointUrl: string;
   };
   authSecretKey: string;
+  dadata: {
+    apiKey: string;
+    url: string;
+  };
 }
 
 const DATABASE_URL = 'DATABASE_URL';
@@ -17,13 +21,23 @@ const ACCESS_KEY = 'ACCESS_KEY';
 const SECRET_KEY = 'SECRET_KEY';
 const ENDPOINT_URL = 'ENDPOINT_URL';
 const AUTH_SECRET_KEY = 'AUTH_SECRET_KEY';
+const DADATA_API_KEY = 'DADATA_API_KEY';
+const DADATA_URL = 'DADATA_URL';
 
 @Global()
 @Injectable()
 export class AppConfigService {
   private requiredVars: string[];
   public constructor(private configService: ConfigService) {
-    this.requiredVars = [DATABASE_URL, ACCESS_KEY, SECRET_KEY, ENDPOINT_URL, AUTH_SECRET_KEY];
+    this.requiredVars = [
+      DATABASE_URL,
+      ACCESS_KEY,
+      SECRET_KEY,
+      ENDPOINT_URL,
+      AUTH_SECRET_KEY,
+      DADATA_API_KEY,
+      DADATA_URL,
+    ];
     this.validateRequiredVariables();
   }
 
@@ -44,6 +58,10 @@ export class AppConfigService {
         endpointUrl: this.configService.get(ENDPOINT_URL) as string,
       },
       authSecretKey: this.configService.get(AUTH_SECRET_KEY) as string,
+      dadata: {
+        apiKey: this.configService.get(DADATA_API_KEY) as string,
+        url: this.configService.get(DADATA_URL) as string,
+      },
     };
   }
 }
