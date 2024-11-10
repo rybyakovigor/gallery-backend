@@ -1,5 +1,6 @@
 // Core
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
 
 // Services
 import { MetricsService } from './metrics.service';
@@ -33,7 +34,8 @@ export class MetricsController {
   }
 
   @Post()
-  public async create(@Body() body: CreateMetricDto): Promise<Metric> {
-    return this.service.create(body);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async create(@Body() body: CreateMetricDto, @Req() request: Request): Promise<void> {
+    this.service.create(body, request);
   }
 }

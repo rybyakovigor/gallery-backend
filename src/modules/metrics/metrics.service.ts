@@ -1,5 +1,9 @@
 // Core
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Request } from 'express';
+import { getClientIp } from 'request-ip';
+import { UAParser } from 'ua-parser-js';
+import { Json } from 'nestjs-zod/z';
 
 // Repository
 import { CreateMetricDto } from './dto/create-metric.dto';
@@ -18,7 +22,17 @@ export class MetricsService {
     return this.repository.findAll();
   }
 
-  public async create(body: CreateMetricDto): Promise<Metric> {
+  public async create(body: CreateMetricDto, request: Request): Promise<Metric> {
+    const ip = getClientIp(request);
+    if (ip) {
+      body.ip = ip;
+    }
+
+    const parser = new UAParser();
+    const userAgent = request.headers['user-agent'] ?? '';
+    const parsedUserAgent = parser.setUA(userAgent).getResult() as unknown as Json;
+    body.useragent = parsedUserAgent;
+
     return await this.repository.create(body);
   }
 
