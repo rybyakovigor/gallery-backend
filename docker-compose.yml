@@ -9,6 +9,8 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - ENDPOINT_URL=${ENDPOINT_URL}
       - AUTH_SECRET_KEY=${AUTH_SECRET_KEY}
+      - DADATA_API_KEY=${DADATA_API_KEY}
+      - DADATA_URL=${DADATA_URL}
     restart: always
     ports:
       - 7777:3000
