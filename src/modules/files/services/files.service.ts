@@ -50,6 +50,7 @@ export class FilesService {
       return this.repository.create(body as Prisma.FileCreateInput, tx);
     } catch (error) {
       await this.s3Service.deleteFile(key);
+      this.logger.error(error);
       throw new HttpException('Error when save file', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -62,6 +63,7 @@ export class FilesService {
         await this.repository.delete(id, tx);
         await this.s3Service.deleteFile(file.key);
       } catch (error) {
+        this.logger.error(error);
         throw new HttpException('Error when delete file', HttpStatus.INTERNAL_SERVER_ERROR);
       }
     });
@@ -71,6 +73,7 @@ export class FilesService {
     try {
       await this.s3Service.deleteFile(key);
     } catch (error) {
+      this.logger.error(error);
       throw new HttpException('Error when delete file from storage', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

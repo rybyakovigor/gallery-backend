@@ -1,6 +1,6 @@
 // Core
 import { createZodDto } from 'nestjs-zod';
-import { z } from 'nestjs-zod/z';
+import { z } from 'zod';
 
 const name = z.string().max(60).min(1).trim();
 const email = z.string().email().max(60).trim();

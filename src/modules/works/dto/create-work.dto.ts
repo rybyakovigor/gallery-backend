@@ -1,6 +1,6 @@
 // Core
 import { createZodDto } from 'nestjs-zod';
-import { z } from 'nestjs-zod/z';
+import { z } from 'zod';
 
 export const WorkSchema = z.object({
   title: z.string().max(120),

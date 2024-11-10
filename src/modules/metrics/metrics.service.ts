@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Request } from 'express';
 import { getClientIp } from 'request-ip';
 import { UAParser } from 'ua-parser-js';
-import { Json } from 'nestjs-zod/z';
+import { SomeZodObject } from 'zod';
 
 // Services
 import { DadataService } from '../core/modules/dadata/dadata.service';
@@ -45,7 +45,7 @@ export class MetricsService {
 
     const parser = new UAParser();
     const userAgent = request.headers['user-agent'] ?? '';
-    const parsedUserAgent = parser.setUA(userAgent).getResult() as unknown as Json;
+    const parsedUserAgent = parser.setUA(userAgent).getResult() as unknown as SomeZodObject;
     body.useragent = parsedUserAgent;
 
     return await this.repository.create(body);

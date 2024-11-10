@@ -1,6 +1,6 @@
 // Core
 import { createZodDto } from 'nestjs-zod';
-import { z } from 'nestjs-zod/z';
+import { z } from 'zod';
 
 const MaterialSchema = z.object({
   title: z.string(),
