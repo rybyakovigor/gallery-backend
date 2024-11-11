@@ -32,7 +32,7 @@ export class MetricsService {
     const ip = getClientIp(request);
     if (ip) {
       body.ip = ip;
-      const { location: locationResponse } = await this.dadataService.findCityByIp('92.248.143.18');
+      const { location: locationResponse } = await this.dadataService.findCityByIp(ip);
       if (locationResponse) {
         const location = {
           city: locationResponse?.data.city_with_type,
