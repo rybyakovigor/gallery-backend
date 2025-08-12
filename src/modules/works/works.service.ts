@@ -47,7 +47,7 @@ export class WorksService {
         create: body.materials.map((item) => ({ material: { connect: { id: item } } })),
       },
       images: {
-        create: body.images.map((item) => ({ file: { connect: { id: item } } })),
+        create: body.images.map((item, index) => ({ file: { connect: { id: item } }, order: index })),
       },
     };
     return this.repository.create(data);
@@ -99,12 +99,24 @@ export class WorksService {
 
       imagesToDelete = currentImages.filter((image) => !body.images!.includes(image.file!.id));
 
-      const newImageIds = body.images.filter((imageId) => !currentImageIds.includes(imageId));
+      const imagesWithOrder = body.images.map((imageId, index) => ({ id: imageId, order: index }));
+
+      const newImages = imagesWithOrder.filter((image) => !currentImageIds.includes(image.id));
+      const imagesToUpdate = imagesWithOrder
+        .filter((image) => currentImageIds.includes(image.id))
+        .map((image) => {
+          const workImage = currentImages.find((ci) => ci.file!.id === image.id);
+          return {
+            where: { id: workImage!.id },
+            data: { order: image.order },
+          };
+        });
 
       Object.assign<Prisma.WorkUpdateInput, Prisma.WorkUpdateInput>(data, {
         images: {
           deleteMany: imagesToDelete.map((image) => ({ id: image.id })),
-          create: newImageIds.map((imageId) => ({ file: { connect: { id: imageId } } })),
+          create: newImages.map((image) => ({ file: { connect: { id: image.id } }, order: image.order })),
+          update: imagesToUpdate,
         },
       });
     }
