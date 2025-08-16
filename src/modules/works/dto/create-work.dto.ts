@@ -15,4 +15,17 @@ export const WorkSchema = z.object({
   materials: z.array(z.string()),
 });
 
-export class CreateWorkDto extends createZodDto(WorkSchema) {}
+export type CreateWorkDtoType = z.infer<typeof WorkSchema>;
+
+export class CreateWorkDto extends createZodDto(WorkSchema) {
+  public title: string;
+  public description: string;
+  public width: number;
+  public height: number;
+  public price: number;
+  public is_sold?: boolean;
+  public is_active?: boolean;
+  public framing_types: string[];
+  public images: string[];
+  public materials: string[];
+}

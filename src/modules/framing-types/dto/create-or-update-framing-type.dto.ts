@@ -6,4 +6,8 @@ const FramingTypeSchema = z.object({
   title: z.string(),
 });
 
-export class CreateOrUpdateFramingTypeDto extends createZodDto(FramingTypeSchema) {}
+export type CreateOrUpdateFramingTypeDtoType = z.infer<typeof FramingTypeSchema>;
+
+export class CreateOrUpdateFramingTypeDto extends createZodDto(FramingTypeSchema) {
+  public title: string;
+}

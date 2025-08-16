@@ -13,40 +13,36 @@ export const FeedbackSchema = z
   .object({
     name,
   })
-  .merge(
-    z.object({
-      email: email.optional(),
-    })
-  )
-  .merge(
-    z.object({
-      phone: phone.optional(),
-    })
-  )
+  .extend({
+    email: email.optional(),
+    phone: phone.optional(),
+  })
   .superRefine((data, ctx) => {
     if (data.email && !data.phone) {
-      // Проверка только email, если phone не предоставлен
       const result = email.safeParse(data.email);
       if (!result.success) {
-        result.error.errors.forEach((issue) => {
+        result.error.issues.forEach((issue) => {
           ctx.addIssue({
             ...issue,
-            path: issue.path || ['email'],
+            path: issue.path.length ? issue.path : ['email'],
           });
         });
       }
     } else if (!data.email && data.phone) {
-      // Проверка только phone, если email не предоставлен
       const result = phone.safeParse(data.phone);
       if (!result.success) {
-        result.error.errors.forEach((issue) => {
+        result.error.issues.forEach((issue) => {
           ctx.addIssue({
             ...issue,
-            path: issue.path || ['phone'],
+            path: issue.path.length ? issue.path : ['phone'],
           });
         });
       }
     }
   });
 
-export class CreateFeedbackDto extends createZodDto(FeedbackSchema) {}
+export class CreateFeedbackDto extends createZodDto(FeedbackSchema) {
+  public name: string;
+  public email?: string;
+  public phone?: string;
+}

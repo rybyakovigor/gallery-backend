@@ -18,7 +18,13 @@ export class FeedbackService {
     return this.repository.findAll();
   }
 
-  public async create(body: CreateFeedbackDto): Promise<Feedback> {
-    return await this.repository.create(body);
+  public async create(dto: CreateFeedbackDto): Promise<Feedback> {
+    const data = {
+      name: dto.name,
+      email: dto.email,
+      phone: dto.phone,
+    };
+
+    return await this.repository.create(data);
   }
 }
