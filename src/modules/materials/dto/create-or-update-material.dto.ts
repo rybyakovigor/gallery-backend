@@ -6,4 +6,8 @@ const MaterialSchema = z.object({
   title: z.string(),
 });
 
-export class CreateOrUpdateMaterialDto extends createZodDto(MaterialSchema) {}
+export type CreateOrUpdateMaterialDtoType = z.infer<typeof MaterialSchema>;
+
+export class CreateOrUpdateMaterialDto extends createZodDto(MaterialSchema) {
+  public title: string;
+}
