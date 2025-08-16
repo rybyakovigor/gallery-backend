@@ -3,17 +3,20 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { Prisma } from '@prisma/client';
 
 // Repositories
-import { WorksRepository } from './works.repository';
+import { WorksRepository } from '../works.repository';
 
 // Types
-import { Work } from './types/work';
+import { Work } from '../types/work';
 
 // Services
-import { FilesService } from '../files/services/files.service';
+import { FilesService } from '@/modules/files/services/files.service';
 
 // Dto
-import { CreateWorkDto } from './dto/create-work.dto';
-import { UpdateWorkDto } from './dto/update-work.dto';
+import { CreateWorkDto } from '../dto/create-work.dto';
+import { UpdateWorkDto } from '../dto/update-work.dto';
+
+// Utils
+import { russianToTranslit } from '@/modules/core/utils';
 
 @Injectable()
 export class WorksService {
@@ -33,7 +36,8 @@ export class WorksService {
   public async create(body: CreateWorkDto): Promise<Work> {
     this.checkImages(body);
     const data = {
-      title: body.title,
+      title: body.title.trim(),
+      slug: russianToTranslit(body.title),
       description: body.description,
       width: body.width,
       height: body.height,
@@ -65,7 +69,7 @@ export class WorksService {
     this.checkImages(body);
     const work = await this.findById(id);
     const data: Prisma.WorkUpdateInput = {
-      title: body.title,
+      title: body.title?.trim(),
       description: body.description,
       width: body.width,
       height: body.height,
@@ -73,6 +77,10 @@ export class WorksService {
       is_sold: body.is_sold,
       is_active: body.is_active,
     };
+
+    if (body.title) {
+      data.slug = russianToTranslit(body.title);
+    }
 
     if (body.framing_types) {
       Object.assign(data, {

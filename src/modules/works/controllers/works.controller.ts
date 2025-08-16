@@ -2,7 +2,7 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
 
 // Services
-import { WorksService } from '../works.service';
+import { WorksService } from '../services/works.service';
 
 // Pipes
 import { UuidV6ValidationPipe } from '@/modules/core/pipes/validate-uuidv6.pipe';
