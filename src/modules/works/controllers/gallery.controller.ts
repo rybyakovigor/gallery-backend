@@ -2,7 +2,7 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 
 // Services
-import { WorksService } from '../works.service';
+import { WorksService } from '../services/works.service';
 
 // Types
 import { Work } from '../types/work';

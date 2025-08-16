@@ -47,7 +47,7 @@ export class FilesService {
     }
 
     try {
-      return this.repository.create(body as Prisma.FileCreateInput, tx);
+      return await this.repository.create(body as Prisma.FileCreateInput, tx);
     } catch (error) {
       await this.s3Service.deleteFile(key);
       this.logger.error(error);
