@@ -81,6 +81,20 @@ type_checking:
     - develop
     - master
 
+build:
+  stage: checks
+  image: $NODE_IMAGE
+  variables:
+    NODE_ENV: production
+  script:
+    - yarn install --frozen-lockfile
+    - yarn build
+  cache: {}
+  only:
+    - merge_requests
+    - develop
+    - master
+
 deploy:
   stage: deploy
   script:
