@@ -1,5 +1,5 @@
 variables:
-  NODE_IMAGE: node:20
+  NODE_IMAGE: node:24-slim
 
 stages:
   - setup
@@ -19,10 +19,10 @@ install_dependencies:
     paths:
       - node_modules/
     policy: pull-push
-  only:
-    - merge_requests
-    - develop
-    - master
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" &&
+        ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" ||
+        $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")'
 
 linter:
   stage: checks
@@ -38,10 +38,10 @@ linter:
     paths:
       - node_modules/
     policy: pull
-  only:
-    - merge_requests
-    - develop
-    - master
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" &&
+        ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" ||
+        $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")'
 
 prettier:
   stage: checks
@@ -57,12 +57,12 @@ prettier:
     paths:
       - node_modules/
     policy: pull
-  only:
-    - merge_requests
-    - develop
-    - master
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" &&
+        ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" ||
+        $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")'
 
-type_checking:
+types:
   stage: checks
   image: $NODE_IMAGE
   script:
@@ -76,10 +76,10 @@ type_checking:
     paths:
       - node_modules/
     policy: pull
-  only:
-    - merge_requests
-    - develop
-    - master
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" &&
+        ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" ||
+        $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")'
 
 build:
   stage: checks
@@ -90,10 +90,10 @@ build:
     - yarn install --frozen-lockfile
     - yarn build
   cache: {}
-  only:
-    - merge_requests
-    - develop
-    - master
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" &&
+        ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" ||
+        $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")'
 
 deploy:
   stage: deploy
@@ -102,10 +102,11 @@ deploy:
   needs:
     - linter
     - prettier
-    - type_checking
+    - types
+    - build
   tags:
     - gallery
     - backend
     - production
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
