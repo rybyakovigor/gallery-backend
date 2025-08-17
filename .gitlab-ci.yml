@@ -20,9 +20,11 @@ install_dependencies:
       - node_modules/
     policy: pull-push
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" &&
-        ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" ||
-        $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")'
+    # Запускается для merge request в develop/master
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" &&
+        ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")
+    # Запускается при пуше в master
+    - if: $CI_COMMIT_BRANCH == "master"
 
 linter:
   stage: checks
@@ -39,9 +41,11 @@ linter:
       - node_modules/
     policy: pull
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" &&
-        ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" ||
-        $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")'
+    # Запускается для merge request в develop/master
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" &&
+        ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")
+    # Запускается при пуше в master
+    - if: $CI_COMMIT_BRANCH == "master"
 
 prettier:
   stage: checks
@@ -58,9 +62,11 @@ prettier:
       - node_modules/
     policy: pull
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" &&
-        ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" ||
-        $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")'
+    # Запускается для merge request в develop/master
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" &&
+        ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")
+    # Запускается при пуше в master
+    - if: $CI_COMMIT_BRANCH == "master"
 
 types:
   stage: checks
@@ -77,9 +83,11 @@ types:
       - node_modules/
     policy: pull
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" &&
-        ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" ||
-        $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")'
+    # Запускается для merge request в develop/master
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" &&
+        ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")
+    # Запускается при пуше в master
+    - if: $CI_COMMIT_BRANCH == "master"
 
 build:
   stage: checks
@@ -91,9 +99,11 @@ build:
     - yarn build
   cache: {}
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" &&
-        ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" ||
-        $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")'
+    # Запускается для merge request в develop/master
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" &&
+        ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master")
+    # Запускается при пуше в master
+    - if: $CI_COMMIT_BRANCH == "master"
 
 deploy:
   stage: deploy
@@ -109,4 +119,5 @@ deploy:
     - backend
     - production
   rules:
+    # Запускается при пуше в master
     - if: '$CI_COMMIT_BRANCH == "master"'
