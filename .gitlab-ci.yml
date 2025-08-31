@@ -4,6 +4,7 @@ variables:
 stages:
   - setup
   - checks
+  - review
   - deploy
 
 install_dependencies:
@@ -105,6 +106,22 @@ build:
     # Запускается при пуше в master
     - if: $CI_COMMIT_BRANCH == "master"
 
+ai_review:
+  stage: review
+  image: registry.gitlab.com/my-own-private-group-ir/ai-mr-reviewer
+  variables:
+    DIFF_CONTENT: $(git diff "origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}" "${CI_COMMIT_SHA}")
+  script:
+    - echo "Starting AI code review..."
+    - node src/index.js
+  needs:
+    - linter
+    - prettier
+    - types
+    - build
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
 deploy:
   stage: deploy
   script:
@@ -114,6 +131,7 @@ deploy:
     - prettier
     - types
     - build
+    - review
   tags:
     - gallery
     - backend
